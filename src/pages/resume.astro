@@ -1,0 +1,209 @@
+---
+// resume.astro — Resume Page
+// SPEC: SPEC-RESUME-001, TASK-012
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout
+  title="Resume"
+  description="Education, projects, research, and skills. All content is real and verifiable."
+>
+  <div class="container page-container">
+    <header class="resume-header">
+      <div class="resume-header-text">
+        <p class="section-label">Professional</p>
+        <h1 class="page-title">Resume</h1>
+        <p class="page-subtitle">
+          Education, projects, skills, and what I'm currently building.
+          All content is real — nothing is fabricated to look more impressive.
+        </p>
+      </div>
+      <a
+        href={`${base}resume.pdf`}
+        class="btn btn-primary"
+        download
+        aria-label="Download resume PDF"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download PDF
+      </a>
+    </header>
+
+    <div class="resume-body">
+
+      <!-- Education -->
+      <section class="resume-section" aria-labelledby="edu-heading">
+        <h2 class="resume-section-title" id="edu-heading">Education</h2>
+        <div class="resume-items">
+          <!-- Replace with real education -->
+          <div class="resume-item card">
+            <div class="item-header">
+              <div>
+                <h3 class="item-title">Coming Soon</h3>
+                <p class="item-subtitle">Your institution and degree — update this file with real information</p>
+              </div>
+              <span class="item-period badge badge-planning">In Progress</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Projects -->
+      <section class="resume-section" aria-labelledby="proj-heading">
+        <h2 class="resume-section-title" id="proj-heading">Projects</h2>
+        <p class="section-note">
+          Full project case studies are available on the <a href={`${base}projects/`}>Projects page</a>.
+          Below is a summary. Add projects by creating files in <code>src/content/projects/</code>.
+        </p>
+
+        <div class="empty-inline">
+          <p>No projects added yet. <a href={`${base}projects/`}>View the projects page →</a></p>
+        </div>
+      </section>
+
+      <!-- Skills -->
+      <section class="resume-section" aria-labelledby="skills-heading">
+        <h2 class="resume-section-title" id="skills-heading">Skills</h2>
+        <p class="section-note">
+          Listed only if genuinely practiced. This list grows as I actually use these technologies.
+        </p>
+
+        <div class="skills-grid">
+          <div class="skill-group">
+            <h3 class="skill-group-title">Languages</h3>
+            <div class="skill-tags">
+              <span class="tag">Python</span>
+              <!-- Add real skills here -->
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <h3 class="skill-group-title">Tools & Frameworks</h3>
+            <div class="skill-tags">
+              <span class="tag">Git</span>
+              <span class="tag">Astro</span>
+              <!-- Add real tools here -->
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <h3 class="skill-group-title">Concepts</h3>
+            <div class="skill-tags">
+              <span class="tag">SDD</span>
+              <span class="tag">Static Sites</span>
+              <!-- Add real concepts here -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Research -->
+      <section class="resume-section" aria-labelledby="research-heading">
+        <h2 class="resume-section-title" id="research-heading">Research & Exploration</h2>
+        <p class="section-note">
+          See the <a href={`${base}research/`}>Research page</a> for detailed notes.
+          Research direction is not pre-defined — entries appear as genuine questions emerge.
+        </p>
+        <div class="empty-inline">
+          <p>No research entries yet. <a href={`${base}research/`}>View the research page →</a></p>
+        </div>
+      </section>
+
+      <!-- Experience -->
+      <section class="resume-section" aria-labelledby="exp-heading">
+        <h2 class="resume-section-title" id="exp-heading">Professional Experience</h2>
+        <p class="section-note">
+          This section will only contain real, verifiable employment.
+          It will remain empty until I have genuine professional experience to document.
+        </p>
+        <div class="coming-soon-block">
+          <span class="badge badge-planning">Coming Soon</span>
+          <p>No professional experience to list at this time. This is honest.</p>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="resume-footer">
+      <a href={`${base}resume.pdf`} class="btn btn-outline" download aria-label="Download resume PDF">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download PDF Resume
+      </a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-container { padding-block: var(--space-16); }
+
+  .resume-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-6);
+    margin-bottom: var(--space-12);
+    flex-wrap: wrap;
+  }
+
+  .page-title { font-size: var(--text-4xl); font-weight: var(--font-bold); letter-spacing: var(--tracking-tight); margin-bottom: var(--space-4); }
+  .page-subtitle { font-size: var(--text-lg); color: var(--color-text-muted); line-height: var(--leading-relaxed); max-width: 52ch; }
+
+  .resume-body { display: flex; flex-direction: column; gap: var(--space-12); max-width: var(--container-md); }
+  .resume-section { }
+  .resume-section-title { font-size: var(--text-2xl); font-weight: var(--font-semibold); margin-bottom: var(--space-5); padding-bottom: var(--space-3); border-bottom: 1px solid var(--color-border); }
+
+  .section-note { font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-5); line-height: var(--leading-relaxed); }
+  .section-note a { color: var(--color-accent); }
+
+  .resume-items { display: flex; flex-direction: column; gap: var(--space-4); }
+  .resume-item { padding: var(--space-5) var(--space-6); }
+  .item-header { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-4); flex-wrap: wrap; }
+  .item-title { font-size: var(--text-base); font-weight: var(--font-semibold); color: var(--color-text); margin-bottom: var(--space-1); }
+  .item-subtitle { font-size: var(--text-sm); color: var(--color-text-muted); }
+  .item-period { flex-shrink: 0; }
+
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--space-6); }
+  .skill-group { }
+  .skill-group-title { font-size: var(--text-sm); font-weight: var(--font-semibold); color: var(--color-text); margin-bottom: var(--space-3); }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+  .empty-inline {
+    padding: var(--space-6);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+  .empty-inline a { color: var(--color-accent); }
+
+  .coming-soon-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    background-color: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .coming-soon-block p { font-size: var(--text-sm); color: var(--color-text-muted); font-style: italic; }
+
+  .resume-footer { padding-top: var(--space-10); border-top: 1px solid var(--color-border); margin-top: var(--space-4); }
+
+  @media (max-width: 640px) {
+    .resume-header { align-items: flex-start; }
+    .skills-grid { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,0 +1,14 @@
+# Current Focus Data
+# Edit this file to update the "Currently Working On" section on the home page.
+# No code changes required — just edit and git push.
+
+items:
+  - title: "Exploring AI/ML Fundamentals"
+    description: "Studying the foundations of machine learning and AI engineering through real open-source projects. Currently reading and experimenting with signal processing and deep learning basics."
+    status: "active"
+    started: "2026-08"
+
+  - title: "Building in Public"
+    description: "Learning to document engineering problems, solutions, and learning processes openly. This portfolio site is the first artifact of that practice."
+    status: "active"
+    started: "2026-08"

@@ -1,0 +1,182 @@
+/*
+ * tokens.css — Design System Tokens
+ * SPEC: SPEC-THEME-001
+ * 
+ * Single source of truth for all visual values.
+ * Never use hardcoded values outside this file.
+ * 
+ * Accent: Cool Teal/Cyan
+ * Grid: 8px base
+ * Type scale: 7 sizes
+ */
+
+/* ─── Light Theme (default) ───────────────────────────────────────────────── */
+:root,
+[data-theme="light"] {
+  /* Backgrounds */
+  --color-bg:         #fafafa;
+  --color-surface:    #ffffff;
+  --color-surface-2:  #f4f4f5;
+  --color-surface-3:  #e4e4e7;
+
+  /* Borders */
+  --color-border:     #e4e4e7;
+  --color-border-2:   #d4d4d8;
+
+  /* Text */
+  --color-text:       #09090b;
+  --color-text-muted: #71717a;
+  --color-text-faint: #a1a1aa;
+
+  /* Accent (teal) */
+  --color-accent:        #0d9488;
+  --color-accent-hover:  #0f766e;
+  --color-accent-light:  #ccfbf1;
+  --color-accent-muted:  #5eead4;
+
+  /* Status colors */
+  --color-planning:    #6b7280;
+  --color-learning:    #3b82f6;
+  --color-in-progress: #f59e0b;
+  --color-completed:   #10b981;
+  --color-archived:    #6b7280;
+
+  /* Code */
+  --color-code-bg:     #f4f4f5;
+  --color-code-text:   #09090b;
+
+  /* Shadows */
+  --shadow-sm:  0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md:  0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+  --shadow-lg:  0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+}
+
+/* ─── Dark Theme ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] {
+  /* Backgrounds */
+  --color-bg:         #09090b;
+  --color-surface:    #18181b;
+  --color-surface-2:  #27272a;
+  --color-surface-3:  #3f3f46;
+
+  /* Borders */
+  --color-border:     #27272a;
+  --color-border-2:   #3f3f46;
+
+  /* Text */
+  --color-text:       #fafafa;
+  --color-text-muted: #a1a1aa;
+  --color-text-faint: #71717a;
+
+  /* Accent (teal — brighter in dark) */
+  --color-accent:        #2dd4bf;
+  --color-accent-hover:  #5eead4;
+  --color-accent-light:  #042f2e;
+  --color-accent-muted:  #0d9488;
+
+  /* Status colors (dark-adjusted) */
+  --color-planning:    #9ca3af;
+  --color-learning:    #60a5fa;
+  --color-in-progress: #fbbf24;
+  --color-completed:   #34d399;
+  --color-archived:    #9ca3af;
+
+  /* Code */
+  --color-code-bg:     #1e1e2e;
+  --color-code-text:   #cdd6f4;
+
+  /* Shadows (more subtle in dark) */
+  --shadow-sm:  0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md:  0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+  --shadow-lg:  0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+}
+
+/* ─── Spacing Scale (8px grid) ───────────────────────────────────────────── */
+:root {
+  --space-px:  1px;
+  --space-0-5: 0.125rem;  /*  2px */
+  --space-1:   0.25rem;   /*  4px */
+  --space-1-5: 0.375rem;  /*  6px */
+  --space-2:   0.5rem;    /*  8px */
+  --space-3:   0.75rem;   /* 12px */
+  --space-4:   1rem;      /* 16px */
+  --space-5:   1.25rem;   /* 20px */
+  --space-6:   1.5rem;    /* 24px */
+  --space-8:   2rem;      /* 32px */
+  --space-10:  2.5rem;    /* 40px */
+  --space-12:  3rem;      /* 48px */
+  --space-16:  4rem;      /* 64px */
+  --space-20:  5rem;      /* 80px */
+  --space-24:  6rem;      /* 96px */
+  --space-32:  8rem;      /* 128px */
+}
+
+/* ─── Type Scale ─────────────────────────────────────────────────────────── */
+:root {
+  --text-xs:    0.75rem;    /* 12px — captions, meta */
+  --text-sm:    0.875rem;   /* 14px — secondary text */
+  --text-base:  1rem;       /* 16px — body */
+  --text-lg:    1.125rem;   /* 18px — lead text */
+  --text-xl:    1.25rem;    /* 20px — small headings */
+  --text-2xl:   1.5rem;     /* 24px — section headings */
+  --text-3xl:   1.875rem;   /* 30px — page headings */
+  --text-4xl:   2.25rem;    /* 36px — hero (desktop) */
+  --text-5xl:   3rem;       /* 48px — hero (large) */
+
+  /* Line heights */
+  --leading-tight:   1.1;
+  --leading-snug:    1.25;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose:   2;
+
+  /* Letter spacing */
+  --tracking-tight:  -0.04em;
+  --tracking-snug:   -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide:   0.025em;
+  --tracking-wider:  0.05em;
+
+  /* Font weights */
+  --font-normal:    400;
+  --font-medium:    500;
+  --font-semibold:  600;
+  --font-bold:      700;
+}
+
+/* ─── Border Radius ──────────────────────────────────────────────────────── */
+:root {
+  --radius-sm:   0.25rem;  /*  4px */
+  --radius-md:   0.5rem;   /*  8px */
+  --radius-lg:   0.75rem;  /* 12px */
+  --radius-xl:   1rem;     /* 16px */
+  --radius-full: 9999px;
+}
+
+/* ─── Transitions ────────────────────────────────────────────────────────── */
+:root {
+  --transition-fast:   150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow:   400ms ease;
+}
+
+/* ─── Layout ─────────────────────────────────────────────────────────────── */
+:root {
+  --container-sm:  640px;
+  --container-md:  768px;
+  --container-lg:  1024px;
+  --container-xl:  1280px;
+  --container-2xl: 1440px;
+
+  --nav-height: 4rem;  /* 64px */
+}
+
+/* ─── Z-index ────────────────────────────────────────────────────────────── */
+:root {
+  --z-base:    0;
+  --z-raised:  10;
+  --z-overlay: 100;
+  --z-modal:   200;
+  --z-nav:     300;
+  --z-toast:   400;
+}

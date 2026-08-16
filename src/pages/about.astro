@@ -1,0 +1,176 @@
+---
+// about.astro — About Page
+// SPEC: SPEC-ABOUT-001, TASK-011
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout
+  title="About"
+  description="Who I am, what I'm learning, how I build, and what I'm exploring. Honest personal introduction."
+>
+  <div class="container page-container">
+    <header class="page-header">
+      <p class="section-label">Personal</p>
+      <h1 class="page-title">About</h1>
+    </header>
+
+    <div class="about-content">
+      <!-- Who I Am -->
+      <section class="about-section" aria-labelledby="who-heading">
+        <h2 class="about-section-title" id="who-heading">Who I Am</h2>
+        <div class="about-text">
+          <p>
+            Hi, I'm <strong>Ran</strong>. I'm an engineer in active learning — studying AI/ML engineering
+            and software architecture by building real things and documenting what I learn along the way.
+          </p>
+          <p>
+            I believe the best way to learn engineering is through real projects, real problems,
+            and honest documentation of both failures and successes.
+          </p>
+        </div>
+      </section>
+
+      <!-- What I'm Learning -->
+      <section class="about-section" aria-labelledby="learning-heading">
+        <h2 class="about-section-title" id="learning-heading">What I'm Learning</h2>
+        <div class="learning-areas">
+          <div class="learning-area card">
+            <span class="badge badge-in-progress">Active</span>
+            <h3>AI/ML Engineering Fundamentals</h3>
+            <p>Signal processing, deep learning basics, and how to work with real open-source ML projects.</p>
+          </div>
+          <div class="learning-area card">
+            <span class="badge badge-in-progress">Active</span>
+            <h3>Software Architecture</h3>
+            <p>How to design systems that are maintainable, extensible, and honestly documented.</p>
+          </div>
+          <div class="learning-area card">
+            <span class="badge badge-learning">Exploring</span>
+            <h3>Open Source Engineering Practices</h3>
+            <p>Contributing to and learning from real open-source projects — reading code, understanding design decisions, experimenting.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- How I Learn -->
+      <section class="about-section" aria-labelledby="how-heading">
+        <h2 class="about-section-title" id="how-heading">How I Learn</h2>
+        <div class="about-text">
+          <p>My learning process follows a consistent arc:</p>
+        </div>
+        <div class="learning-process">
+          {[
+            { step: '01', label: 'Choose a real project or problem', desc: 'Not a tutorial — a real open-source project or a genuine problem I want to solve.' },
+            { step: '02', label: 'Build and experiment', desc: 'Read the code, run it, break it, modify it. Learn by doing.' },
+            { step: '03', label: 'Encounter real problems', desc: 'The problems that come from real work are the ones worth documenting.' },
+            { step: '04', label: 'Document honestly', desc: 'Write about what failed, why it failed, and how I eventually found the solution.' },
+            { step: '05', label: 'Reflect and extract principles', desc: 'What did this experience teach me? What would I do differently?' },
+          ].map(({ step, label, desc }) => (
+            <div class="process-step">
+              <div class="step-number" aria-hidden="true">{step}</div>
+              <div class="step-content">
+                <h3 class="step-label">{label}</h3>
+                <p class="step-desc">{desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- What I'm Exploring -->
+      <section class="about-section" aria-labelledby="exploring-heading">
+        <h2 class="about-section-title" id="exploring-heading">What I'm Exploring</h2>
+        <div class="about-text">
+          <p>
+            I'm currently in an early phase of exploring several areas.
+            These are genuine curiosities, not pre-planned specializations:
+          </p>
+          <ul class="exploring-list">
+            <li>AI/ML engineering workflows and tooling</li>
+            <li>Signal processing and biosignal analysis (from braindecode exploration)</li>
+            <li>Software engineering documentation practices (SDD, ADRs, specs)</li>
+            <li>Open source contribution workflows</li>
+          </ul>
+          <p>
+            These will evolve into concrete research or project entries as I develop real experience.
+          </p>
+        </div>
+      </section>
+
+      <!-- Links -->
+      <section class="about-section" aria-labelledby="links-heading">
+        <h2 class="about-section-title" id="links-heading">Find Me</h2>
+        <div class="links-grid">
+          <a href="https://github.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer" class="link-card card card-link">
+            <span class="link-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+            </span>
+            <div>
+              <span class="link-name">GitHub</span>
+              <span class="link-desc">Code and open source work</span>
+            </div>
+          </a>
+
+          <a href={`${base}resume/`} class="link-card card card-link">
+            <span class="link-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+            </span>
+            <div>
+              <span class="link-name">Resume</span>
+              <span class="link-desc">Education, projects, skills</span>
+            </div>
+          </a>
+        </div>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-container { padding-block: var(--space-16); }
+  .page-header { margin-bottom: var(--space-12); }
+  .page-title { font-size: var(--text-4xl); font-weight: var(--font-bold); letter-spacing: var(--tracking-tight); margin-bottom: var(--space-4); }
+
+  .about-content { display: flex; flex-direction: column; gap: var(--space-14); max-width: var(--container-md); }
+  .about-section { }
+  .about-section-title { font-size: var(--text-2xl); font-weight: var(--font-semibold); letter-spacing: var(--tracking-tight); margin-bottom: var(--space-6); padding-bottom: var(--space-3); border-bottom: 1px solid var(--color-border); }
+
+  .about-text { display: flex; flex-direction: column; gap: var(--space-4); }
+  .about-text p { font-size: var(--text-base); color: var(--color-text-muted); line-height: var(--leading-relaxed); }
+
+  .learning-areas { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space-4); margin-top: var(--space-2); }
+  .learning-area { display: flex; flex-direction: column; gap: var(--space-3); }
+  .learning-area h3 { font-size: var(--text-base); font-weight: var(--font-semibold); color: var(--color-text); }
+  .learning-area p { font-size: var(--text-sm); color: var(--color-text-muted); line-height: var(--leading-relaxed); }
+
+  .learning-process { display: flex; flex-direction: column; gap: var(--space-4); margin-top: var(--space-4); }
+  .process-step { display: flex; gap: var(--space-5); align-items: flex-start; }
+  .step-number { font-size: var(--text-xs); font-family: 'JetBrains Mono', monospace; font-weight: var(--font-bold); color: var(--color-accent); background-color: var(--color-accent-light); border: 1px solid var(--color-accent-muted); border-radius: var(--radius-md); width: 2.5rem; height: 2.5rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .step-content { flex: 1; }
+  .step-label { font-size: var(--text-base); font-weight: var(--font-semibold); color: var(--color-text); margin-bottom: var(--space-1); }
+  .step-desc { font-size: var(--text-sm); color: var(--color-text-muted); line-height: var(--leading-relaxed); }
+
+  .exploring-list { padding-left: var(--space-6); display: flex; flex-direction: column; gap: var(--space-2); }
+  .exploring-list li { font-size: var(--text-base); color: var(--color-text-muted); line-height: var(--leading-relaxed); }
+
+  .links-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--space-4); }
+  .link-card { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-5); }
+  .link-icon { color: var(--color-accent); flex-shrink: 0; }
+  .link-name { display: block; font-size: var(--text-base); font-weight: var(--font-semibold); color: var(--color-text); }
+  .link-desc { display: block; font-size: var(--text-xs); color: var(--color-text-faint); }
+
+  @media (max-width: 640px) {
+    .learning-areas { grid-template-columns: 1fr; }
+    .links-grid { grid-template-columns: 1fr; }
+  }
+</style>

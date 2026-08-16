@@ -1,0 +1,31 @@
+---
+title: "Exploring braindecode — EEG Deep Learning Library"
+date: 2026-08-15
+category: "ML"
+status: "learning"
+summary: "Started working through braindecode — a Python library for EEG signal decoding using deep learning. Currently reading the source code and running the basic tutorials."
+what_i_learned: "EEG data is stored as channels × time points. The MNE preprocessing pipeline handles artifact removal before deep learning models see the data."
+related_projects: []
+related_posts: []
+---
+
+This is my first encounter with EEG signal processing. I chose braindecode as a starting point
+because it's the most comprehensive open-source toolkit available and provides clear tutorials.
+
+## What I'm Doing
+
+- Reading through braindecode tutorials
+- Running the BCIC IV 2a dataset examples
+- Understanding the MNE preprocessing pipeline
+- Looking at ShallowConvNet architecture
+
+## What's Difficult
+
+The terminology around epochs, windows, and trials in EEG differs from standard deep learning
+batch/sample terminology. Getting this straight took more time than expected.
+
+## Next Steps
+
+- Complete the first full classification experiment
+- Document the data flow in a note
+- Understand how to evaluate BCI models (kappa, accuracy on different paradigms)

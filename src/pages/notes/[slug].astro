@@ -1,0 +1,29 @@
+---
+// notes/[slug].astro — Note Detail
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes', ({ data }) => !data.draft);
+  return notes.map((note) => ({
+    params: { slug: note.slug },
+    props: { note },
+  }));
+}
+
+const { note } = Astro.props;
+const { Content } = await note.render();
+const base = import.meta.env.BASE_URL;
+---
+
+<ArticleLayout
+  title={note.data.title}
+  description={note.data.problem}
+  date={note.data.date}
+  tags={note.data.tags}
+  categories={[note.data.category]}
+  backLink={`${base}notes/`}
+  backLabel="All Notes"
+>
+  <Content />
+</ArticleLayout>

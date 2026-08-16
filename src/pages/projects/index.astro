@@ -1,0 +1,237 @@
+---
+// projects/index.astro — Projects List Page
+// SPEC: SPEC-PROJECTS-001, TASK-006
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allProjects = await getCollection('projects', ({ data }) => !data.draft);
+const projects = allProjects.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const base = import.meta.env.BASE_URL;
+
+const statusBadge: Record<string, { label: string; class: string }> = {
+  planning:     { label: 'Planning',     class: 'badge-planning' },
+  learning:     { label: 'Learning',     class: 'badge-learning' },
+  'in-progress':{ label: 'In Progress',  class: 'badge-in-progress' },
+  completed:    { label: 'Completed',    class: 'badge-completed' },
+  archived:     { label: 'Archived',     class: 'badge-archived' },
+};
+---
+
+<BaseLayout
+  title="Projects"
+  description="Real engineering projects with full context — problem, approach, my contribution, and lessons learned."
+>
+  <div class="container page-container">
+    <header class="page-header">
+      <p class="section-label">Work</p>
+      <h1 class="page-title">Projects</h1>
+      <p class="page-subtitle">
+        Real projects with honest context. When the project originates from open source,
+        I clearly document the original repository and my specific contribution.
+      </p>
+    </header>
+
+    {projects.length > 0 ? (
+      <div class="projects-grid">
+        {projects.map((project) => {
+          const badge = statusBadge[project.data.status] || statusBadge['planning'];
+          return (
+            <a href={`${base}projects/${project.slug}/`} class="project-card card card-link">
+              <div class="project-card-header">
+                <span class={`badge ${badge.class}`}>{badge.label}</span>
+                {project.data.source_type !== 'original' && (
+                  <span class="badge badge-oss">OSS Study</span>
+                )}
+              </div>
+
+              <h2 class="project-title">{project.data.title}</h2>
+              <p class="project-desc">{project.data.description}</p>
+
+              {project.data.source_type !== 'original' && project.data.original_repository && (
+                <p class="project-origin">
+                  <span class="origin-label">Based on:</span>
+                  <span class="origin-repo">{project.data.original_repository.replace('https://github.com/', '')}</span>
+                </p>
+              )}
+
+              {project.data.tech_stack.length > 0 && (
+                <div class="project-stack">
+                  {project.data.tech_stack.map((tech) => (
+                    <span class="tag">{tech}</span>
+                  ))}
+                </div>
+              )}
+
+              <div class="project-footer">
+                <time datetime={project.data.date.toISOString()} class="project-date">
+                  {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short' }).format(project.data.date)}
+                </time>
+                <span class="project-cta">Read case study →</span>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    ) : (
+      <div class="empty-state">
+        <div class="empty-icon" aria-hidden="true">🚧</div>
+        <h2>Projects Coming Soon</h2>
+        <p>
+          I'm actively studying and building. Projects will be documented here once I've worked through
+          them enough to write a genuine case study. Check
+          <a href="https://github.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer">GitHub</a>
+          for work in progress.
+        </p>
+        <p class="empty-note">
+          I only publish projects I can document honestly — no placeholder content.
+        </p>
+      </div>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .page-container {
+    padding-block: var(--space-16);
+  }
+
+  .page-header {
+    max-width: 56ch;
+    margin-bottom: var(--space-12);
+  }
+
+  .page-title {
+    font-size: var(--text-4xl);
+    font-weight: var(--font-bold);
+    letter-spacing: var(--tracking-tight);
+    margin-bottom: var(--space-4);
+  }
+
+  .page-subtitle {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    line-height: var(--leading-relaxed);
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-5);
+  }
+
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .project-card-header {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  .badge-oss {
+    background: var(--color-accent-light);
+    color: var(--color-accent);
+    border-color: var(--color-accent-muted);
+  }
+
+  .project-title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-semibold);
+    color: var(--color-text);
+    line-height: var(--leading-snug);
+  }
+
+  .project-desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: var(--leading-relaxed);
+    flex: 1;
+  }
+
+  .project-origin {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+  }
+
+  .origin-label {
+    font-weight: var(--font-medium);
+  }
+
+  .origin-repo {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--color-accent);
+  }
+
+  .project-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1-5);
+  }
+
+  .project-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+    margin-top: auto;
+  }
+
+  .project-date {
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .project-cta {
+    font-size: var(--text-sm);
+    color: var(--color-accent);
+    font-weight: var(--font-medium);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: var(--space-20) var(--space-8);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-xl);
+    background-color: var(--color-surface);
+  }
+
+  .empty-icon {
+    font-size: 3rem;
+    margin-bottom: var(--space-4);
+  }
+
+  .empty-state h2 {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-4);
+  }
+
+  .empty-state p {
+    color: var(--color-text-muted);
+    max-width: 52ch;
+    margin-inline: auto;
+    margin-bottom: var(--space-3);
+    line-height: var(--leading-relaxed);
+  }
+
+  .empty-note {
+    font-size: var(--text-sm) !important;
+    color: var(--color-text-faint) !important;
+    font-style: italic;
+  }
+
+  @media (max-width: 640px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

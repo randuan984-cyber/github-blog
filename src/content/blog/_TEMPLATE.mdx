@@ -1,0 +1,65 @@
+---
+title: "Example: Debugging a Neural Network Training Loop"
+description: "When my training loss stopped decreasing after epoch 3, I spent three hours investigating batch normalization, learning rate schedules, and gradient flow — this is what I found."
+date: 2026-08-15
+categories: ["Engineering"]
+tags: ["pytorch", "debugging", "ml-training"]
+draft: true
+---
+
+## Why
+
+I was working through a simple MNIST classification example using PyTorch and noticed the training loss
+plateaued unexpectedly early. This seemed like a good problem to document because debugging training
+loops is a fundamental ML engineering skill, and the process matters more than the solution.
+
+## Problem
+
+After epoch 3, training loss stopped decreasing and stayed around 0.24 regardless of further training.
+Validation accuracy was 89% — decent, but the loss curve suggested something was preventing further learning.
+
+## What I Tried
+
+1. **Reduced learning rate** — no effect
+2. **Increased batch size** — no effect  
+3. **Added learning rate scheduler** (StepLR) — slight improvement but plateau persisted
+4. **Checked for NaN gradients** — none found
+
+## What Failed
+
+Assumption: I assumed the model had converged. This led me to focus on hyperparameters
+when the actual issue was in data preprocessing.
+
+## Why It Failed
+
+I was normalizing images to [0, 1] but the model expected [-1, 1].
+The loss function wasn't getting useful gradient signal because the activation ranges
+were misaligned with what BatchNorm expected.
+
+## Solution
+
+Added proper normalization: `transforms.Normalize((0.5,), (0.5,))` instead of just `transforms.ToTensor()`.
+
+## Implementation
+
+```python
+transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.5,), (0.5,))  # This was missing
+])
+```
+
+## Result
+
+Loss decreased to 0.06 by epoch 10. Validation accuracy improved to 97%.
+
+## What I Learned
+
+- Always verify your data preprocessing pipeline before debugging the model
+- Print sample values from your DataLoader before training to sanity-check normalization
+- Loss plateaus can be caused by data issues, not just model/hyperparameter issues
+
+## What I Would Improve
+
+- Add a preprocessing sanity-check step to my training checklist
+- Use `torchvision.utils.make_grid()` to visually inspect batches during debugging
