@@ -4,7 +4,7 @@
 
 > A long-term, maintainable personal technical archive built with Astro, Vanilla CSS, and GitHub Pages.
 
-**Site:** `https://YOUR_USERNAME.github.io/Github-blog-antigravity/`  
+**Site:** `https://randuan984-cyber.github.io/github-blog/`  
 **Stack:** Astro · Vanilla CSS · Content Collections · Pagefind · GitHub Actions  
 **Method:** Specification-Driven Development (SDD)
 
@@ -21,14 +21,14 @@ When content doesn't exist yet: it says "Coming Soon" or is hidden.
 
 ## Features
 
-- 🏗️ **SDD Architecture** — all specs, decisions, and tasks documented
-- 📝 **Content Collections** — type-safe frontmatter schemas
-- 🎨 **Dark/Light/System Mode** — no flash-of-unstyled-content
-- 🔍 **Pagefind Search** — zero-server static search
-- 📱 **Responsive** — 375px to 1920px
-- ♿ **Accessible** — semantic HTML, focus states, skip links, reduced motion
-- 🤖 **SEO** — sitemap, Open Graph, Twitter Card, canonical URLs
-- 🚀 **Auto Deploy** — every `git push` → GitHub Actions → GitHub Pages
+- **SDD Architecture** — all specs, decisions, and tasks documented
+- **Content Collections** — type-safe frontmatter schemas
+- **Dark/Light/System Mode** — no flash-of-unstyled-content
+- **Pagefind Search** — zero-server static search
+- **Responsive** — 375px to 1920px
+- **Accessible** — semantic HTML, focus states, skip links, reduced motion
+- **SEO** — sitemap, Open Graph, Twitter Card, canonical URLs
+- **Auto Deploy** — every `git push` → GitHub Actions → GitHub Pages
 
 ---
 
@@ -159,13 +159,6 @@ Edit `src/data/focus.yaml` — no code changes needed.
 2. Go to **Settings → Pages → Source → GitHub Actions**
 3. Go to **Settings → Actions → General → Workflow permissions → Read and write**
 
-### Updating Site URL
-
-Edit `astro.config.mjs`:
-```js
-site: 'https://YOUR_USERNAME.github.io',
-base: '/Github-blog-antigravity',
-```
 
 ### Ongoing Deployment
 
@@ -206,7 +199,7 @@ See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for the full workflow.
 ## Project Structure
 
 ```
-d:\Github-blog-antigravity\
+d:\Github-blog\
 ├── .github/workflows/deploy.yml     ← Auto deploy
 ├── docs/                            ← SDD docs
 │   ├── PROJECT.md
