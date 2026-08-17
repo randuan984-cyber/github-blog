@@ -2,6 +2,9 @@
 // BaseLayout.astro — TASK-003, SPEC-WEBSITE-001
 // All pages use this layout. Provides: head, meta, theme script, nav, footer.
 
+// Import global styles via Astro's bundler (correct way for src/ files)
+import '../styles/global.css';
+
 interface Props {
   title: string;
   description?: string;
@@ -68,9 +71,6 @@ const base = import.meta.env.BASE_URL;
         document.documentElement.setAttribute('data-theme', resolved);
       })();
     </script>
-
-    <!-- Global Styles -->
-    <link rel="stylesheet" href={`${base}styles/global.css`} />
 
     <!-- Slot for page-specific head content -->
     <slot name="head" />
