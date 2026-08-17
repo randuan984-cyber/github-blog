@@ -7,8 +7,10 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   // TODO: Replace with your actual GitHub username and repo name
   // If using a custom domain, set site to your domain and remove base
-  site: 'https://YOUR_USERNAME.github.io',
-  base: '/Github-blog-antigravity/',
+  // site: 'https://YOUR_USERNAME.github.io',
+  // base: '/Github-blog-antigravity/',
+  site: 'https://randuan984-cyber.github.io',
+  base: '/github-blog/',
   integrations: [
     mdx(),
     sitemap(),
