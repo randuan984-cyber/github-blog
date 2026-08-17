@@ -26,6 +26,8 @@ const byCategory = research.reduce<Record<string, typeof research>>((acc, entry)
 }, {});
 
 const categories = Object.keys(byCategory).sort();
+
+const GITHUB_NEW_RESEARCH = 'https://github.com/randuan984-cyber/github-blog/new/main/src/content/research';
 ---
 
 <BaseLayout
@@ -40,6 +42,12 @@ const categories = Object.keys(byCategory).sort();
         An open-ended log of research questions, paper reading notes, experiments, and reflections.
         Research direction is not pre-defined — it emerges from real projects and curiosity.
       </p>
+      <div class="header-actions">
+        <a href={GITHUB_NEW_RESEARCH} target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          记录新研究问题
+        </a>
+      </div>
     </header>
 
     <div class="research-note card" role="note">
@@ -98,9 +106,10 @@ const categories = Object.keys(byCategory).sort();
 
 <style>
   .page-container { padding-block: var(--space-16); }
-  .page-header { max-width: 56ch; margin-bottom: var(--space-8); }
+  .page-header { margin-bottom: var(--space-8); }
   .page-title { font-size: var(--text-4xl); font-weight: var(--font-bold); letter-spacing: var(--tracking-tight); margin-bottom: var(--space-4); }
   .page-subtitle { font-size: var(--text-lg); color: var(--color-text-muted); line-height: var(--leading-relaxed); }
+  .header-actions { display: flex; gap: var(--space-3); flex-wrap: wrap; margin-top: var(--space-5); }
 
   .research-note {
     margin-bottom: var(--space-10);

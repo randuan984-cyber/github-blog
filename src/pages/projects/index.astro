@@ -17,6 +17,9 @@ const statusBadge: Record<string, { label: string; class: string }> = {
   completed:    { label: 'Completed',    class: 'badge-completed' },
   archived:     { label: 'Archived',     class: 'badge-archived' },
 };
+
+const GITHUB_USER = 'randuan984-cyber';
+const GITHUB_REPOS_URL = `https://github.com/${GITHUB_USER}?tab=repositories`;
 ---
 
 <BaseLayout
@@ -33,69 +36,175 @@ const statusBadge: Record<string, { label: string; class: string }> = {
       </p>
     </header>
 
-    {projects.length > 0 ? (
-      <div class="projects-grid">
-        {projects.map((project) => {
-          const badge = statusBadge[project.data.status] || statusBadge['planning'];
-          return (
-            <a href={`${base}projects/${project.slug}/`} class="project-card card card-link">
-              <div class="project-card-header">
-                <span class={`badge ${badge.class}`}>{badge.label}</span>
-                {project.data.source_type !== 'original' && (
-                  <span class="badge badge-oss">OSS Study</span>
-                )}
-              </div>
-
-              <h2 class="project-title">{project.data.title}</h2>
-              <p class="project-desc">{project.data.description}</p>
-
-              {project.data.source_type !== 'original' && project.data.original_repository && (
-                <p class="project-origin">
-                  <span class="origin-label">Based on:</span>
-                  <span class="origin-repo">{project.data.original_repository.replace('https://github.com/', '')}</span>
-                </p>
-              )}
-
-              {project.data.tech_stack.length > 0 && (
-                <div class="project-stack">
-                  {project.data.tech_stack.map((tech) => (
-                    <span class="tag">{tech}</span>
-                  ))}
+    {/* ─── Case Studies (Astro Content) ─────────────────────────────── */}
+    {projects.length > 0 && (
+      <section class="case-studies" aria-labelledby="case-studies-heading">
+        <h2 class="subsection-title" id="case-studies-heading">Case Studies</h2>
+        <div class="projects-grid">
+          {projects.map((project) => {
+            const badge = statusBadge[project.data.status] || statusBadge['planning'];
+            return (
+              <a href={`${base}projects/${project.id.replace(/\.(md|mdx)$/, '')}/`} class="project-card card card-link">
+                <div class="project-card-header">
+                  <span class={`badge ${badge.class}`}>{badge.label}</span>
+                  {project.data.source_type !== 'original' && (
+                    <span class="badge badge-oss">OSS Study</span>
+                  )}
                 </div>
-              )}
 
-              <div class="project-footer">
-                <time datetime={project.data.date.toISOString()} class="project-date">
-                  {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short' }).format(project.data.date)}
-                </time>
-                <span class="project-cta">Read case study →</span>
-              </div>
-            </a>
-          );
-        })}
-      </div>
-    ) : (
-      <div class="empty-state">
-        <div class="empty-icon" aria-hidden="true">🚧</div>
-        <h2>Projects Coming Soon</h2>
-        <p>
-          I'm actively studying and building. Projects will be documented here once I've worked through
-          them enough to write a genuine case study. Check
-          <a href="https://github.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer">GitHub</a>
-          for work in progress.
-        </p>
-        <p class="empty-note">
-          I only publish projects I can document honestly — no placeholder content.
-        </p>
-      </div>
+                <h3 class="project-title">{project.data.title}</h3>
+                <p class="project-desc">{project.data.description}</p>
+
+                {project.data.source_type !== 'original' && project.data.original_repository && (
+                  <p class="project-origin">
+                    <span class="origin-label">Based on:</span>
+                    <span class="origin-repo">{project.data.original_repository.replace('https://github.com/', '')}</span>
+                  </p>
+                )}
+
+                {project.data.tech_stack.length > 0 && (
+                  <div class="project-stack">
+                    {project.data.tech_stack.map((tech) => (
+                      <span class="tag">{tech}</span>
+                    ))}
+                  </div>
+                )}
+
+                <div class="project-footer">
+                  <time datetime={project.data.date.toISOString()} class="project-date">
+                    {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short' }).format(project.data.date)}
+                  </time>
+                  <span class="project-cta">Read case study →</span>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </section>
     )}
+
+    {/* ─── GitHub Repositories (Live via API) ──────────────────────── */}
+    <section class="github-repos-section" aria-labelledby="github-repos-heading">
+      <div class="subsection-header">
+        <div>
+          <h2 class="subsection-title" id="github-repos-heading">
+            GitHub Repositories
+            <span class="live-badge" aria-label="Live data from GitHub">LIVE</span>
+          </h2>
+          <p class="subsection-subtitle">All public repositories, updated in real-time from GitHub.</p>
+        </div>
+        <a
+          href={GITHUB_REPOS_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-outline btn-sm"
+          aria-label="View all repositories on GitHub"
+        >
+          View All on GitHub →
+        </a>
+      </div>
+
+      {/* Loading state */}
+      <div id="github-repos-loading" class="loading-state" aria-live="polite">
+        <div class="loading-spinner" aria-hidden="true"></div>
+        <span>Loading repositories from GitHub...</span>
+      </div>
+
+      {/* Error state */}
+      <div id="github-repos-error" class="error-state" style="display:none" aria-live="polite">
+        <p>
+          Unable to load repositories.
+          <a href={GITHUB_REPOS_URL} target="_blank" rel="noopener noreferrer">View directly on GitHub →</a>
+        </p>
+      </div>
+
+      {/* Repos grid — filled by client-side JS */}
+      <div id="github-repos-grid" class="projects-grid" style="display:none" aria-label="GitHub repositories"></div>
+    </section>
   </div>
 </BaseLayout>
 
-<style>
-  .page-container {
-    padding-block: var(--space-16);
+{/* Client-side GitHub API fetch */}
+<script define:vars={{ GITHUB_USER }}>
+  const loading = document.getElementById('github-repos-loading');
+  const error = document.getElementById('github-repos-error');
+  const grid = document.getElementById('github-repos-grid');
+
+  // Language → color map
+  const langColors = {
+    Python: '#3572A5', JavaScript: '#f1e05a', TypeScript: '#3178c6',
+    HTML: '#e34c26', CSS: '#563d7c', Shell: '#89e051',
+    Jupyter: '#DA5B0B', Rust: '#dea584', Go: '#00ADD8', Java: '#b07219',
+    'C++': '#f34b7d', C: '#555555', Ruby: '#701516', Swift: '#ffac45',
+  };
+
+  function escapeHtml(str) {
+    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
+
+  function timeSince(dateStr) {
+    const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+    const intervals = [[31536000,'year'],[2592000,'month'],[86400,'day'],[3600,'hour'],[60,'minute']];
+    for (const [s, label] of intervals) {
+      const count = Math.floor(seconds / s);
+      if (count >= 1) return `${count} ${label}${count > 1 ? 's' : ''} ago`;
+    }
+    return 'just now';
+  }
+
+  function renderRepo(repo) {
+    const langColor = langColors[repo.language] || '#8b949e';
+    const desc = repo.description ? escapeHtml(repo.description) : '<em style="opacity:0.5">No description</em>';
+    const lang = repo.language ? `<span class="repo-lang"><span class="lang-dot" style="background:${langColor}"></span>${escapeHtml(repo.language)}</span>` : '';
+    const stars = repo.stargazers_count > 0 ? `<span class="repo-stat">⭐ ${repo.stargazers_count}</span>` : '';
+    const forks = repo.forks_count > 0 ? `<span class="repo-stat">🍴 ${repo.forks_count}</span>` : '';
+    const fork = repo.fork ? `<span class="repo-fork-badge">fork</span>` : '';
+
+    return `
+      <a href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener noreferrer"
+         class="repo-card card card-link" aria-label="${escapeHtml(repo.name)} repository">
+        <div class="repo-card-header">
+          <span class="repo-name">${escapeHtml(repo.name)}</span>
+          ${fork}
+        </div>
+        <p class="repo-desc">${desc}</p>
+        <div class="repo-footer">
+          <div class="repo-meta">${lang}${stars}${forks}</div>
+          <span class="repo-updated">${timeSince(repo.pushed_at)}</span>
+        </div>
+      </a>`;
+  }
+
+  async function loadRepos() {
+    try {
+      const res = await fetch(
+        `https://api.github.com/users/${GITHUB_USER}/repos?sort=pushed&per_page=12&type=public`,
+        { headers: { Accept: 'application/vnd.github+json' } }
+      );
+
+      if (!res.ok) throw new Error(`GitHub API: ${res.status}`);
+      const repos = await res.json();
+
+      if (!Array.isArray(repos) || repos.length === 0) {
+        throw new Error('No repos returned');
+      }
+
+      grid.innerHTML = repos.map(renderRepo).join('');
+      loading.style.display = 'none';
+      grid.style.display = 'grid';
+
+    } catch (err) {
+      console.warn('GitHub repos fetch failed:', err);
+      loading.style.display = 'none';
+      error.style.display = 'block';
+    }
+  }
+
+  loadRepos();
+</script>
+
+<style>
+  .page-container { padding-block: var(--space-16); }
 
   .page-header {
     max-width: 56ch;
@@ -115,12 +224,102 @@ const statusBadge: Record<string, { label: string; class: string }> = {
     line-height: var(--leading-relaxed);
   }
 
+  /* ─── Case Studies Section ─────────────────────────────────────── */
+  .case-studies {
+    margin-bottom: var(--space-16);
+  }
+
+  /* ─── GitHub Repos Section ─────────────────────────────────────── */
+  .github-repos-section {
+    padding-top: var(--space-10);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .subsection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+    flex-wrap: wrap;
+  }
+
+  .subsection-title {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-semibold);
+    letter-spacing: var(--tracking-tight);
+    margin-bottom: var(--space-2);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .live-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.1em 0.5em;
+    font-size: var(--text-xs);
+    font-weight: var(--font-bold);
+    letter-spacing: var(--tracking-wider);
+    background-color: var(--color-completed);
+    color: #fff;
+    border-radius: var(--radius-sm);
+    animation: livepulse 2s infinite;
+  }
+
+  @keyframes livepulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .subsection-subtitle {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  /* ─── Loading / Error ───────────────────────────────────────────── */
+  .loading-state {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-10);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .loading-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--color-border);
+    border-top-color: var(--color-accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .error-state {
+    padding: var(--space-6);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-lg);
+    text-align: center;
+  }
+
+  .error-state a { color: var(--color-accent); }
+
+  /* ─── Grids ─────────────────────────────────────────────────────── */
   .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: var(--space-5);
   }
 
+  /* ─── Case Study Cards ──────────────────────────────────────────── */
   .project-card {
     display: flex;
     flex-direction: column;
@@ -161,9 +360,7 @@ const statusBadge: Record<string, { label: string; class: string }> = {
     color: var(--color-text-faint);
   }
 
-  .origin-label {
-    font-weight: var(--font-medium);
-  }
+  .origin-label { font-weight: var(--font-medium); }
 
   .origin-repo {
     font-family: 'JetBrains Mono', monospace;
@@ -197,41 +394,92 @@ const statusBadge: Record<string, { label: string; class: string }> = {
     font-weight: var(--font-medium);
   }
 
-  .empty-state {
-    text-align: center;
-    padding: var(--space-20) var(--space-8);
-    border: 1px dashed var(--color-border);
-    border-radius: var(--radius-xl);
-    background-color: var(--color-surface);
+  /* ─── GitHub Repo Cards (rendered by JS) ────────────────────────── */
+  :global(.repo-card) {
+    display: flex !important;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5) var(--space-6);
   }
 
-  .empty-icon {
-    font-size: 3rem;
-    margin-bottom: var(--space-4);
+  :global(.repo-card-header) {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
   }
 
-  .empty-state h2 {
-    font-size: var(--text-2xl);
-    margin-bottom: var(--space-4);
+  :global(.repo-name) {
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    color: var(--color-accent);
+    font-family: 'JetBrains Mono', monospace;
+    word-break: break-all;
   }
 
-  .empty-state p {
+  :global(.repo-fork-badge) {
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0 0.4em;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  :global(.repo-desc) {
+    font-size: var(--text-sm);
     color: var(--color-text-muted);
-    max-width: 52ch;
-    margin-inline: auto;
-    margin-bottom: var(--space-3);
     line-height: var(--leading-relaxed);
+    flex: 1;
+    margin: 0;
   }
 
-  .empty-note {
-    font-size: var(--text-sm) !important;
-    color: var(--color-text-faint) !important;
-    font-style: italic;
+  :global(.repo-footer) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-border);
+  }
+
+  :global(.repo-meta) {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  :global(.repo-lang) {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  :global(.lang-dot) {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  :global(.repo-stat) {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  :global(.repo-updated) {
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
   }
 
   @media (max-width: 640px) {
-    .projects-grid {
-      grid-template-columns: 1fr;
-    }
+    .projects-grid { grid-template-columns: 1fr; }
+    .subsection-header { flex-direction: column; align-items: flex-start; }
   }
 </style>

@@ -24,6 +24,8 @@ const categoryEmoji: Record<string, string> = {
   decision:      '📝',
   general:       '📌',
 };
+
+const GITHUB_NEW_NOTE = 'https://github.com/randuan984-cyber/github-blog/new/main/src/content/notes';
 ---
 
 <BaseLayout
@@ -38,6 +40,12 @@ const categoryEmoji: Record<string, string> = {
         Real problems I encountered while building and studying.
         Format: Problem → Investigation → What Failed → Root Cause → Solution → Lesson.
       </p>
+      <div class="header-actions">
+        <a href={GITHUB_NEW_NOTE} target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          记录新笔记
+        </a>
+      </div>
     </header>
 
     {categories.length > 0 && (
@@ -57,7 +65,7 @@ const categoryEmoji: Record<string, string> = {
     {notes.length > 0 ? (
       <div class="notes-list">
         {notes.map((note) => (
-          <a href={`${base}notes/${note.slug}/`} class="note-item card card-link">
+          <a href={`${base}notes/${note.id.replace(/\.(md|mdx)$/, '')}/`} class="note-item card card-link">
             <div class="note-meta">
               <time datetime={note.data.date.toISOString()} class="note-date">
                 {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric' }).format(note.data.date)}
@@ -95,9 +103,10 @@ const categoryEmoji: Record<string, string> = {
 
 <style>
   .page-container { padding-block: var(--space-16); }
-  .page-header { max-width: 56ch; margin-bottom: var(--space-10); }
+  .page-header { margin-bottom: var(--space-10); }
   .page-title { font-size: var(--text-4xl); font-weight: var(--font-bold); letter-spacing: var(--tracking-tight); margin-bottom: var(--space-4); }
   .page-subtitle { font-size: var(--text-lg); color: var(--color-text-muted); line-height: var(--leading-relaxed); }
+  .header-actions { display: flex; gap: var(--space-3); flex-wrap: wrap; margin-top: var(--space-5); }
 
   .category-filter { display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-8); flex-wrap: wrap; }
   .filter-label { font-size: var(--text-xs); font-weight: var(--font-semibold); letter-spacing: var(--tracking-wider); text-transform: uppercase; color: var(--color-text-faint); }

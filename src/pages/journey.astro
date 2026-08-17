@@ -108,6 +108,38 @@ const statusColors: Record<string, string> = {
         </p>
       </div>
     )}
+
+    {/* ─── GitHub Stars Section ──────────────────────────────────── */}
+    <section class="stars-section" aria-labelledby="stars-heading">
+      <div class="stars-header">
+        <div>
+          <h2 class="subsection-title" id="stars-heading">
+            GitHub Stars
+            <span class="live-badge" aria-label="Live">LIVE</span>
+          </h2>
+          <p class="subsection-subtitle">Projects I find interesting enough to star — a window into my learning interests.</p>
+        </div>
+        <a
+          href="https://github.com/randuan984-cyber?tab=stars"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-outline btn-sm"
+        >
+          View All Stars →
+        </a>
+      </div>
+
+      <div id="stars-loading" class="loading-state" aria-live="polite">
+        <div class="loading-spinner" aria-hidden="true"></div>
+        <span>Loading starred repositories...</span>
+      </div>
+
+      <div id="stars-error" style="display:none" class="error-state" aria-live="polite">
+        <p>Unable to load stars. <a href="https://github.com/randuan984-cyber?tab=stars" target="_blank" rel="noopener noreferrer">View on GitHub →</a></p>
+      </div>
+
+      <div id="stars-grid" class="stars-grid" style="display:none" aria-label="Starred repositories"></div>
+    </section>
   </div>
 </BaseLayout>
 
@@ -116,6 +148,90 @@ const statusColors: Record<string, string> = {
   .page-header { max-width: 56ch; margin-bottom: var(--space-12); }
   .page-title { font-size: var(--text-4xl); font-weight: var(--font-bold); letter-spacing: var(--tracking-tight); margin-bottom: var(--space-4); }
   .page-subtitle { font-size: var(--text-lg); color: var(--color-text-muted); line-height: var(--leading-relaxed); }
+
+  /* ─── GitHub Stars Section ─────────────────────────────────────── */
+  .stars-section {
+    margin-top: var(--space-16);
+    padding-top: var(--space-10);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .stars-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+    flex-wrap: wrap;
+  }
+
+  .subsection-title {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-semibold);
+    letter-spacing: var(--tracking-tight);
+    margin-bottom: var(--space-2);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .live-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.1em 0.5em;
+    font-size: var(--text-xs);
+    font-weight: var(--font-bold);
+    letter-spacing: var(--tracking-wider);
+    background-color: var(--color-completed);
+    color: #fff;
+    border-radius: var(--radius-sm);
+    animation: livepulse 2s infinite;
+  }
+
+  @keyframes livepulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .subsection-subtitle { font-size: var(--text-sm); color: var(--color-text-muted); }
+
+  .stars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-4);
+  }
+
+  .loading-state {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-8);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .loading-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--color-border);
+    border-top-color: var(--color-accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .error-state {
+    padding: var(--space-5);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-lg);
+    text-align: center;
+  }
+
+  .error-state a { color: var(--color-accent); }
 
   .timeline { display: flex; flex-direction: column; gap: var(--space-10); }
 
@@ -212,5 +328,88 @@ const statusColors: Record<string, string> = {
   @media (max-width: 640px) {
     .timeline-entries { padding-left: var(--space-4); }
     .entry-connector { left: calc(-1 * var(--space-4) - 5px); }
+    .stars-grid { grid-template-columns: 1fr; }
+    .stars-header { flex-direction: column; align-items: flex-start; }
   }
+</style>
+
+<script>
+  // GitHub Stars — client-side fetch
+  const loading = document.getElementById('stars-loading');
+  const errEl   = document.getElementById('stars-error');
+  const grid    = document.getElementById('stars-grid');
+
+  const langColors = {
+    Python:'#3572A5', JavaScript:'#f1e05a', TypeScript:'#3178c6',
+    HTML:'#e34c26', CSS:'#563d7c', Rust:'#dea584', Go:'#00ADD8',
+    Java:'#b07219', 'C++':'#f34b7d', C:'#555555',
+  };
+
+  function esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function ago(d) {
+    const s = Math.floor((Date.now() - new Date(d).getTime()) / 1000);
+    for (const [n, l] of [[31536000,'yr'],[2592000,'mo'],[86400,'d'],[3600,'h'],[60,'min']]) {
+      const c = Math.floor(s / n);
+      if (c >= 1) return `${c}${l} ago`;
+    }
+    return 'now';
+  }
+
+  async function loadStars() {
+    try {
+      const res = await fetch(
+        'https://api.github.com/users/randuan984-cyber/starred?per_page=12&sort=created',
+        { headers: { Accept: 'application/vnd.github+json' } }
+      );
+      if (!res.ok) throw new Error(res.status);
+      const repos = await res.json();
+      if (!repos.length) throw new Error('empty');
+
+      grid.innerHTML = repos.map(r => {
+        const lc = langColors[r.language] || '#8b949e';
+        const lang = r.language
+          ? `<span class="s-lang"><span style="background:${lc};width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:middle"></span>${esc(r.language)}</span>`
+          : '';
+        const stars = r.stargazers_count > 0 ? `<span class="s-stat">⭐ ${r.stargazers_count}</span>` : '';
+        const desc = r.description
+          ? `<p class="s-desc">${esc(r.description)}</p>`
+          : `<p class="s-desc" style="opacity:0.45"><em>No description</em></p>`;
+        return `
+          <a href="${esc(r.html_url)}" target="_blank" rel="noopener noreferrer" class="s-card card card-link">
+            <div class="s-name">
+              <span style="opacity:0.6;margin-right:4px;font-size:.8em">⭐</span>
+              <span class="s-owner">${esc(r.full_name.split('/')[0])}</span><span style="opacity:0.4">/</span><strong>${esc(r.name)}</strong>
+            </div>
+            ${desc}
+            <div class="s-footer">
+              <div class="s-meta">${lang}${stars}</div>
+              <span class="s-updated">${ago(r.updated_at)}</span>
+            </div>
+          </a>`;
+      }).join('');
+
+      loading.style.display = 'none';
+      grid.style.display = 'grid';
+    } catch(e) {
+      loading.style.display = 'none';
+      errEl.style.display = 'block';
+    }
+  }
+
+  loadStars();
+</script>
+
+<style>
+  :global(.s-card) { display:flex !important; flex-direction:column; gap:var(--space-3); padding:var(--space-4) var(--space-5); }
+  :global(.s-name) { font-size:var(--text-sm); font-weight:var(--font-semibold); font-family:'JetBrains Mono',monospace; color:var(--color-accent); word-break:break-all; }
+  :global(.s-owner) { color:var(--color-text-muted); font-weight:var(--font-normal); }
+  :global(.s-desc) { font-size:var(--text-xs); color:var(--color-text-muted); line-height:var(--leading-relaxed); flex:1; margin:0; }
+  :global(.s-footer) { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--space-2); padding-top:var(--space-3); border-top:1px solid var(--color-border); }
+  :global(.s-meta) { display:flex; align-items:center; gap:var(--space-3); flex-wrap:wrap; }
+  :global(.s-lang) { font-size:var(--text-xs); color:var(--color-text-muted); display:flex; align-items:center; }
+  :global(.s-stat) { font-size:var(--text-xs); color:var(--color-text-muted); }
+  :global(.s-updated) { font-size:var(--text-xs); color:var(--color-text-faint); font-family:'JetBrains Mono',monospace; }
 </style>

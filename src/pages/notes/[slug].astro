@@ -6,7 +6,7 @@ import { getCollection } from 'astro:content';
 export async function getStaticPaths() {
   const notes = await getCollection('notes', ({ data }) => !data.draft);
   return notes.map((note) => ({
-    params: { slug: note.slug },
+    params: { slug: note.id.replace(/\.(md|mdx)$/, '') },
     props: { note },
   }));
 }
@@ -14,6 +14,8 @@ export async function getStaticPaths() {
 const { note } = Astro.props;
 const { Content } = await note.render();
 const base = import.meta.env.BASE_URL;
+
+const editUrl = `https://github.com/randuan984-cyber/github-blog/edit/main/src/content/notes/${note.id}`;
 ---
 
 <ArticleLayout
@@ -24,6 +26,7 @@ const base = import.meta.env.BASE_URL;
   categories={[note.data.category]}
   backLink={`${base}notes/`}
   backLabel="All Notes"
+  editUrl={editUrl}
 >
   <Content />
 </ArticleLayout>
