@@ -54,9 +54,14 @@ const GITHUB_REPO = 'https://github.com/randuan984-cyber/github-blog/tree/main/s
     )}
 
     {posts.length > 0 ? (
-      <div class="posts-list">
+      <div class="posts-list" id="posts-list">
         {posts.map((post) => (
-          <a href={`${base}blog/${post.id.replace(/\.(md|mdx)$/, '')}/`} class="post-item card card-link">
+          <a
+            href={`${base}blog/${post.id.replace(/\.(md|mdx)$/, '')}/`}
+            class="post-item card card-link"
+            data-categories={post.data.categories.join(',')}
+            data-tags={post.data.tags.join(',')}
+          >
             <div class="post-meta">
               <time datetime={post.data.date.toISOString()} class="post-date">
                 {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric' }).format(post.data.date)}
@@ -96,6 +101,54 @@ const GITHUB_REPO = 'https://github.com/randuan984-cyber/github-blog/tree/main/s
     )}
   </div>
 </BaseLayout>
+
+<script>
+  function applyBlogFilter() {
+    const params = new URLSearchParams(window.location.search);
+    const selectedCategory = params.get('category');
+    const selectedTag = params.get('tag');
+
+    const pills = document.querySelectorAll('.filter-pill');
+    pills.forEach((pill) => {
+      const href = pill.getAttribute('href') || '';
+      if (!selectedCategory && href.endsWith('blog/')) {
+        pill.classList.add('filter-pill--active');
+      } else if (selectedCategory && href.includes(`category=${encodeURIComponent(selectedCategory)}`)) {
+        pill.classList.add('filter-pill--active');
+      } else {
+        pill.classList.remove('filter-pill--active');
+      }
+    });
+
+    const items = document.querySelectorAll('.post-item');
+    items.forEach((item) => {
+      const el = item as HTMLElement;
+      const categories = (el.dataset.categories || '').split(',');
+      const tags = (el.dataset.tags || '').split(',');
+
+      let visible = true;
+      if (selectedCategory && !categories.includes(selectedCategory)) {
+        visible = false;
+      }
+      if (selectedTag && !tags.includes(selectedTag)) {
+        visible = false;
+      }
+
+      el.style.display = visible ? 'flex' : 'none';
+    });
+  }
+
+  window.addEventListener('DOMContentLoaded', applyBlogFilter);
+  window.addEventListener('popstate', applyBlogFilter);
+  document.querySelectorAll('.filter-pill').forEach((pill) => {
+    pill.addEventListener('click', (e) => {
+      e.preventDefault();
+      const href = (e.currentTarget as HTMLAnchorElement).getAttribute('href') || '';
+      history.pushState(null, '', href);
+      applyBlogFilter();
+    });
+  });
+</script>
 
 <style>
   .page-container { padding-block: var(--space-16); }

@@ -1,0 +1,37 @@
+---
+title: "braindecode 实践问题：对项目整体架构理解不清"
+date: 2026-08-18
+category: "architecture"
+tags: ["braindecode", "eeg", "bci", "开源学习", "项目架构"]
+problem: "初次接触 braindecode 时，面对 datasets、preprocessing、models、training 等多个模块，不清楚各模块之间的关系，也不知道应该从哪里开始阅读。"
+draft: false
+---
+
+## Problem
+
+初次接触 braindecode 时，面对 `datasets`、`preprocessing`、`models`、`training` 等多个模块，不清楚各模块之间的关系，也不知道应该从哪里开始阅读。
+
+## Investigation
+
+通过 README、源码目录、examples 和测试代码进行交叉查看，并重点分析运动想象（如 `bcic_iv_2a_moabb_trial`）和睡眠分期（如 `chambon2018`）的官方示例。
+
+## What Failed
+
+一开始直接从具体代码入手，容易陷入函数和参数细节，缺少对项目整体流程的认识。
+
+## Root Cause
+
+没有先建立“数据 → 预处理 → 模型 → 训练 → 预测”的整体认知框架。
+
+## Solution
+
+先根据 README 建立预期架构，再通过 examples 和源码逐层验证，明确各模块职责和典型入口：
+
+* `datasets`：数据加载与管理
+* `preprocessing`：信号预处理与窗口切分
+* `models`：深度学习模型定义
+* `training` / `classifier`：训练与评估流程
+
+## Lesson
+
+阅读陌生开源项目时，应先建立整体架构，再深入具体实现，避免陷入局部代码。

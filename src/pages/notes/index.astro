@@ -63,9 +63,14 @@ const GITHUB_NEW_NOTE = 'https://github.com/randuan984-cyber/github-blog/new/mai
     )}
 
     {notes.length > 0 ? (
-      <div class="notes-list">
+      <div class="notes-list" id="notes-list">
         {notes.map((note) => (
-          <a href={`${base}notes/${note.id.replace(/\.(md|mdx)$/, '')}/`} class="note-item card card-link">
+          <a
+            href={`${base}notes/${note.id.replace(/\.(md|mdx)$/, '')}/`}
+            class="note-item card card-link"
+            data-category={note.data.category}
+            data-tags={note.data.tags.join(',')}
+          >
             <div class="note-meta">
               <time datetime={note.data.date.toISOString()} class="note-date">
                 {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric' }).format(note.data.date)}
@@ -100,6 +105,54 @@ const GITHUB_NEW_NOTE = 'https://github.com/randuan984-cyber/github-blog/new/mai
     )}
   </div>
 </BaseLayout>
+
+<script>
+  function applyFilter() {
+    const params = new URLSearchParams(window.location.search);
+    const selectedCategory = params.get('category');
+    const selectedTag = params.get('tag');
+
+    const pills = document.querySelectorAll('.filter-pill');
+    pills.forEach((pill) => {
+      const href = pill.getAttribute('href') || '';
+      if (!selectedCategory && href.endsWith('notes/')) {
+        pill.classList.add('filter-pill--active');
+      } else if (selectedCategory && href.includes(`category=${encodeURIComponent(selectedCategory)}`)) {
+        pill.classList.add('filter-pill--active');
+      } else {
+        pill.classList.remove('filter-pill--active');
+      }
+    });
+
+    const items = document.querySelectorAll('.note-item');
+    items.forEach((item) => {
+      const el = item as HTMLElement;
+      const cat = el.dataset.category || '';
+      const tags = (el.dataset.tags || '').split(',');
+
+      let visible = true;
+      if (selectedCategory && cat !== selectedCategory) {
+        visible = false;
+      }
+      if (selectedTag && !tags.includes(selectedTag)) {
+        visible = false;
+      }
+
+      el.style.display = visible ? 'flex' : 'none';
+    });
+  }
+
+  window.addEventListener('DOMContentLoaded', applyFilter);
+  window.addEventListener('popstate', applyFilter);
+  document.querySelectorAll('.filter-pill').forEach((pill) => {
+    pill.addEventListener('click', (e) => {
+      e.preventDefault();
+      const href = (e.currentTarget as HTMLAnchorElement).getAttribute('href') || '';
+      history.pushState(null, '', href);
+      applyFilter();
+    });
+  });
+</script>
 
 <style>
   .page-container { padding-block: var(--space-16); }

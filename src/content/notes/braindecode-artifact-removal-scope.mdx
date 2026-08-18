@@ -1,0 +1,32 @@
+---
+title: "braindecode 实践问题：错误判断官方示例包含完整伪影去除"
+date: 2026-08-18
+category: "debugging"
+tags: ["braindecode", "eeg", "preprocessing", "artifact-removal"]
+problem: "最初认为 EEG 输入模型前应该进行较完整的伪影去除，但实际阅读官方最小示例后发现并没有这一步。"
+draft: false
+---
+
+## Problem
+
+最初认为 EEG 脑电信号输入模型前应该进行较完整的伪影去除（Artifact Removal），但实际阅读 braindecode 官方最小示例后发现并没有包含这一清洗步骤。
+
+## Investigation
+
+对比官方示例中的预处理流程，并进一步了解 MNE、EEG 预处理工具在信号清洗中的作用与分工定位。
+
+## What Failed
+
+将“实际 EEG 工程项目通常需要的完整预处理流程”和“官方最小示例用于快速验证模型的流程”混为一谈。
+
+## Root Cause
+
+没有首先明确示例代码的设计目标——官方最小示例的目标是**以最短路径跑通端到端流程**，而非演示生产级全套清洗。
+
+## Solution
+
+重新区分“快速跑通 Demo”和“完整 EEG 数据处理”两个场景，确认 braindecode 示例重点是验证端到端训练流程，而不是完成所有信号清洗。复杂伪影去除通常交由上游专用工具（如 MNE）完成。
+
+## Lesson
+
+分析代码时不能只根据经验推断功能，必须结合项目定位和实际实现进行验证。
