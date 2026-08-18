@@ -158,7 +158,7 @@ const statusBadge: Record<string, { label: string; class: string }> = {
           {featuredProjects.map((project) => {
             const badge = statusBadge[project.data.status] || statusBadge['planning'];
             return (
-              <a href={`${base}projects/${project.slug}/`} class="project-card card card-link">
+              <a href={`${base}projects/${project.id.replace(/\.(md|mdx)$/, '')}/`} class="project-card card card-link">
                 <div class="project-card-header">
                   <span class={`badge ${badge.class}`}>{badge.label}</span>
                   {project.data.source_type !== 'original' && (
@@ -218,7 +218,7 @@ const statusBadge: Record<string, { label: string; class: string }> = {
       {latestPosts.length > 0 ? (
         <div class="blog-list">
           {latestPosts.map((post) => (
-            <a href={`${base}blog/${post.slug}/`} class="blog-item card card-link">
+            <a href={`${base}blog/${post.id.replace(/\.(md|mdx)$/, '')}/`} class="blog-item card card-link">
               <div class="blog-item-meta">
                 <time datetime={post.data.date.toISOString()} class="blog-date">
                   {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric' }).format(post.data.date)}

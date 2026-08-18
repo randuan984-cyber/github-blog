@@ -1,7 +1,7 @@
 ---
 // notes/[slug].astro — Note Detail
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
   const notes = await getCollection('notes', ({ data }) => !data.draft);
@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 }
 
 const { note } = Astro.props;
-const { Content } = await note.render();
+const { Content } = await render(note);
 const base = import.meta.env.BASE_URL;
 
 const editUrl = `https://github.com/randuan984-cyber/github-blog/edit/main/src/content/notes/${note.id}`;
